@@ -1,0 +1,27 @@
+name: Mi Primer Pipeline
+
+on:
+  push:
+    branches: [ "main" ]  # Se activa cuando haces push a la rama main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # Corrige el error "lastest" → "latest"
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4  # Trae el código del repositorio
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'  # Usamos Node.js 18
+
+    - name: Install Dependencies
+      run: npm install  # Instala las dependencias de package.json
+
+    - name: Run Linter (Opcional)
+      run: npm run lint  # Puedes ignorarlo si no tienes linter
+
+    - name: Run Tests
+      run: npm test  # Ejecuta las pruebas definidas en test/test.js
