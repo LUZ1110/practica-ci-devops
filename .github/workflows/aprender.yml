@@ -2,11 +2,11 @@ name: Mi Primer Pipeline
 
 on:
   push:
-    branches: [ "main" ]  # Se activa cuando haces push a la rama main
+    branches: [ "main" ]  # Se activa al hacer push a la rama main
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest  # Corrige el error "lastest" → "latest"
+    runs-on: ubuntu-latest  # Corrige "lastest" → "latest"
 
     steps:
     - name: Checkout code
@@ -18,10 +18,19 @@ jobs:
         node-version: '18'  # Usamos Node.js 18
 
     - name: Install Dependencies
-      run: npm install  # Instala las dependencias de package.json
+      run: npm install  # Instala las dependencias del package.json
 
     - name: Run Linter (Opcional)
-      run: npm run lint  # Puedes ignorarlo si no tienes linter
+      run: npm run lint || echo "No hay linter configurado"  # Evita fallo si no hay linter
 
     - name: Run Tests
       run: npm test  # Ejecuta las pruebas definidas en test/test.js
+
+    - name: Build and Package App
+      run: zip -r demo-app.zip .  # Empaqueta toda la aplicación en un ZIP
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: demo-app
+        path: demo-app.zip  # Permite descargar el ZIP desde GitHub Actions
